@@ -1,0 +1,19 @@
+version: '2'
+
+services:
+    g-nginx:
+        environment:
+            - VIRTUAL_HOST=${HTTP_HOST}
+    g-php:
+        volumes:
+            - g-unison-sync:/var/www:nocopy
+    nginx-proxy:
+        image: jwilder/nginx-proxy
+        ports:
+          - "82:80"
+        volumes:
+          - /var/run/docker.sock:/tmp/docker.sock:ro
+
+volumes:
+    g-unison-sync:
+        external: true

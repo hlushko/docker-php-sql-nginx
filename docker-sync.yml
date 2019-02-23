@@ -1,0 +1,16 @@
+options:
+    verbose: true
+    max-attempts: 7
+
+version: '2'
+
+syncs:
+    g-unison-sync:
+        src: './code'
+        sync_strategy: 'unison'
+        sync_userid: ${UID}
+        sync_excludes_type: 'Name'
+        sync_excludes:
+            - 'app/.idea'
+            - 'app/runtime'
+            - 'app/vendor'

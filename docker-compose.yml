@@ -1,0 +1,54 @@
+version: '2'
+
+services:
+    g-sql:
+        build:
+            context: ./sql
+            args:
+                USER_ID: ${UID}
+                GROUP_ID: ${GID}
+        container_name: g-sql
+        volumes:
+            - ./sql/data:/var/lib/mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: ${SQL_ROOT_PASS}
+    g-php:
+        build:
+            context: ./php
+            args:
+                USER_ID: ${UID}
+                GROUP_ID: ${GID}
+                ICU_ARCHIVE: ${ICU_ARCHIVE}
+        container_name: g-php
+        environment:
+            - REPOSITORY=${CODE_REPOSITORY}
+            - APP_HOST=${HTTP_HOST}
+            - DB_HOST=g-sql
+            - DB_NAME=gtats
+            - DB_USER=root
+            - DB_PASS=${SQL_ROOT_PASS}
+            - TEST_DB_HOST=g-sql
+            - TEST_DB_NAME=gtats_test
+            - TEST_DB_USER=root
+            - TEST_DB_PASS=${SQL_ROOT_PASS}
+        volumes:
+            - ${SSH_KEY}:/root/.ssh/id_rsa:ro
+            - ~/.gitconfig:/root/.gitconfig:ro
+            - ~/.composer:/root/.composer
+            - /var/www
+        depends_on:
+            - g-sql
+    g-nginx:
+        build: ./nginx
+        container_name: g-nginx
+        ports:
+            - 80
+        volumes_from:
+            - g-php
+        depends_on:
+            - g-php
+
+networks:
+    default:
+        external:
+            name: g-network
