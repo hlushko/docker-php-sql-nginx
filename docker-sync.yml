@@ -12,5 +12,7 @@ syncs:
         sync_excludes_type: 'Name'
         sync_excludes:
             - 'app/.idea'
+            - 'app/bootstrap/cache'
             - 'app/runtime'
+            - 'app/storage'
             - 'app/vendor'

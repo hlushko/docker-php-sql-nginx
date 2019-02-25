@@ -16,7 +16,7 @@ fi
 
 if [ "$1" = "php-fpm" ]; then
     echo "Installing vendors..."
-#    composer install
+    composer install
 
 #    echo "Execute DB migrations..."
 #    app/console doctrine:migrations:migrate -n
