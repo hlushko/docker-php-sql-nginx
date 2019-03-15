@@ -18,8 +18,16 @@ RUN apt-get update \
         --with-jpeg-dir=/usr/include/ \
     && docker-php-ext-install -j$(nproc) \
         zip \
+        bcmath \
         pdo_mysql \
         gd \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN apt-get update \
+    && apt-get install -y \
+        libssh2-1-dev libssh2-1 \
+    && pecl install ssh2-1.2-dev \
+    && docker-php-ext-enable ssh2 \
     && rm -rf /var/lib/apt/lists/*
 
 # intl installation block start

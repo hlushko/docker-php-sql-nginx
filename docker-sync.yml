@@ -11,6 +11,8 @@ syncs:
         sync_userid: ${UID}
         sync_excludes_type: 'Name'
         sync_excludes:
+            - '.bash_history'
+            - '.composer'
             - 'app/.idea'
             - 'app/bootstrap/cache'
             - 'app/runtime'
