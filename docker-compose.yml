@@ -43,6 +43,7 @@ services:
         container_name: g-nginx
         ports:
             - 80
+            - 443
         volumes_from:
             - g-php
         depends_on:
