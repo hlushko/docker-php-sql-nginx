@@ -33,6 +33,7 @@ services:
             - TEST_DB_PASS=${SQL_ROOT_PASS}
         volumes:
             - ${SSH_KEY}:/root/.ssh/id_rsa:ro
+            - ${SSH_KEY}:/var/www/.ssh/id_rsa:ro
             - ~/.gitconfig:/root/.gitconfig:ro
             - ~/.composer:/root/.composer
             - /var/www
@@ -42,8 +43,7 @@ services:
         build: ./nginx
         container_name: g-nginx
         ports:
-            - 80
-            - 443
+            - "8000:80"
         volumes_from:
             - g-php
         depends_on:

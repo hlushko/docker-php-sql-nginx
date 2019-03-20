@@ -2,6 +2,7 @@ FROM php:7.2-fpm
 
 RUN apt-get update && apt-get install -y \
         git \
+        mc \
         netcat \
     && rm -rf /var/lib/apt/lists/*
 
@@ -56,6 +57,19 @@ COPY app.conf /usr/local/etc/php-fpm.d/
 RUN mkdir -p /root/.ssh \
     && echo "\tHost *\n\tStrictHostKeyChecking no\n" >> /root/.ssh/config
 
+# cron
+# Add crontab file in the cron directory
+ADD crontab /etc/cron.d/php-cron
+# Give execution rights on the cron job
+RUN chmod 0644 /etc/cron.d/php-cron
+# Create the log file to be able to run tail
+RUN touch /var/log/cron.log
+# install
+RUN apt-get update \
+    && apt-get install -y \
+        cron \
+    && rm -rf /var/lib/apt/lists/*
+
 ARG USER_ID
 ENV USER_ID $USER_ID
 ARG GROUP_ID
@@ -69,7 +83,11 @@ WORKDIR /var/www
 EXPOSE 9001
 
 COPY docker-entrypoint.sh /
+COPY docker-php-entrypoint.sh /
 RUN chmod +x /docker-entrypoint.sh
+RUN chmod +x /docker-php-entrypoint.sh
+
+RUN chown www-data:www-data /var/log/cron.log
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["php-fpm"]
