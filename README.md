@@ -33,6 +33,40 @@ There two ways to run these components:
 
 Enjoy!
 
+
+### Useful commands
+
+#### Backup and restore DB
+
+Backup:
+
+```bash
+docker exec g-sql sh -c 'exec mysqldump -uroot -p"$MYSQL_ROOT_PASSWORD" gtats' > ../../backup.sql
+```
+
+Restore:
+
+```bash
+cat backup.sql | docker exec g-sql sh -c 'exec mysql -uroot -p"$MYSQL_ROOT_PASSWORD" gtats'
+```
+
+Or:
+
+```bash
+mysql -h 172.26.0.2 -u root -pg-root9 gtats < ../../backup.sql
+```
+
+#### Compress/decompress composer libraries
+
+```bash
+tar cvf lib.tar vendor/composer/
+```
+
+```bash
+tar -xvf lib.tar
+```
+
+
 [0]: https://docs.docker.com/compose/networking/#/using-a-pre-existing-network
 [1]: http://docker-sync.io/
 [3]: https://docs.docker.com/engine/reference/commandline/port/
